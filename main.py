@@ -1,6 +1,5 @@
 import asyncio
 from shazamio import Shazam, serializers, Serialize
-import pandas as pd
 
 async def main():
   shazam = Shazam()
