@@ -1,6 +1,7 @@
+import json
+import requests
+
 def tk(link):
-	import json
-	import requests
 	url = "https://tiktok-downloader-download-tiktok-videos-without-watermark.p.rapidapi.com/vid/index"
 
 	querystring = {"url":link}
@@ -12,4 +13,13 @@ def tk(link):
 
 	response = requests.request("GET", url, headers=headers, params=querystring)
 	rest = json.loads(response.text)
-	return {"Video":rest['video'][0],"Music":rest['music'][0]}
+	print(rest)
+	print(rest['video'][0])
+	print(rest['music'][0])
+	req = requests.get(rest['video'][0], headers=headers)
+	with open('video.mp4', 'wb') as mp3:
+		mp3.write(req.content)
+	# return {"Video":rest['video'][0],"Music":rest['music'][0]}
+
+
+tk("https://www.tiktok.com/@papakooll/video/7172486318830652673?_t=8XuGQr6lwkj&_r=1")
