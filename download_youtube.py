@@ -9,5 +9,6 @@ def download(url):
     yt.streams.filter(only_audio=True)
 
     stream = yt.streams.get_by_itag(22)
-    stream.download(output_path=SAVE_PATH, filename='okey.mp3')
+    stream.download(output_path=SAVE_PATH, filename="music.mp3")
+    print("music.mp3 succes")
     return stream

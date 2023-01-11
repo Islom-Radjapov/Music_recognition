@@ -1,10 +1,10 @@
-TOKEN = "5270401029:AAFLMs1JjXXN9QhzRj6A2gXCO1c7jlNiP_0"
-
 from aiogram import Bot, Dispatcher, executor, types
 import logging
 from aiogram.types import ContentType, File, Message
-from main import start_audio
 import os
+import time
+from sql_code import Database
+db = Database('database.db')
 
 logging.basicConfig(level=logging.INFO)
 
@@ -22,17 +22,35 @@ async def other_message(message: types.Message):
 
 @dp.message_handler(content_types=[ContentType.VOICE])
 async def other_message(message: types.Message):
-    # file_id = message.voice.file_id
-    # file = await bot.get_file(file_id)
-    # file_path = file.file_path
-    # await bot.send_audio(message.from_user.id, result_mp3, performer = "Performer", title = "Title")
-    # await bot.download_file(file_path, "voice\\123.mp3")
-    voic = os.listdir('voice\\')
-    print(voic[0])
+    file_id = message.voice.file_id
+    file = await bot.get_file(file_id)
+    file_path = file.file_path
+    await bot.download_file(file_path, "voice\\voice.ogg")
 
-    result_mp3 = start_audio(f"voice\\{voic[0]}")
-    print(result_mp3)
-    # await bot.send_audio(message.from_user.id, result_mp3, performer="Performer", title="Title")
+    await bot.send_message(message.from_user.id, "Yuklanmoqda")
+
+    os.system("python main.py")
+
+    music = os.listdir(r"Download_data")
+
+    print(music)
+    if music:
+        print('Succes BOT')
+        file_music = open(fr"Download_data\{music[0]}", 'rb')
+        await bot.send_audio(message.from_user.id, file_music, title=music[0])
+        file_music.close()
+        os.remove(fr"Download_data\{music[0]}")
+        text = db.get_text()
+
+        lengh = len(text[0][0])
+        try:
+            await bot.send_message(message.from_user.id, text[0][0])
+        except:
+            await bot.send_document(message.from_user.id, text[0][0][:int(lengh / 2)])
+            await bot.send_document(message.from_user.id, text[0][0][int(lengh / 2):])
+    else:
+        await bot.send_message(message.from_user.id, "Qoshiq topilmadi")
+
 
 
 
